@@ -1,0 +1,67 @@
+﻿@model  dynamic
+
+@{
+    ViewBag.Title = "getcustomerbyName";
+    var j = Model.Count;
+    var x = ViewBag.Order.Count;
+    
+}
+
+<h2>Customer Details</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Customer Name</th>
+            <th>Customer Email</th>
+            <th>Customer Age</th>
+            <th>Customer Phone</th>
+            <th>Customer Address</th>
+            <th>Customer Gender</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < j; i++)
+        {
+            <tr>
+                <th>@Model[i].Name</th>
+                <th scope="row" id="book_ids">@Model[i].Email</th>
+                <th scope="row">@Model[i].Age</th>
+                <td>@Model[i].Phone</td>
+                <td>@Model[i].Address</td>
+                <td>@Model[i].Gender</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br>
+<br>
+<h2>Customer Order Details</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Customer Id</th>
+            <th>Book Id</th>
+            <th>Book Name</th>
+        
+            <th>Book Price</th>
+            <th>Order Time</th>
+            <th>Total Quantity</th>
+           
+        </tr>
+    </thead>
+    <tbody>
+        @for(int w=0;w<x;w++)
+        {
+        <tr>
+            <th>@ViewBag.Order[w].customer_Id</th>
+            <th>@ViewBag.Order[w].book_Id</th>
+            <th>@ViewBag.Books[w].book_Name</th>
+            <th>@ViewBag.Order[w].book_Price</th>
+            <th>@ViewBag.Order[w].order_Time</th>
+            <th>@ViewBag.Order[w].total_Quantity</th>
+        </tr>
+        }
+    </tbody>
+</table>
+<br>
+<br>

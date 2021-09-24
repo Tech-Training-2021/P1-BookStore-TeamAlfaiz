@@ -1,0 +1,42 @@
+﻿@model  dynamic
+
+@{
+    ViewBag.Title = "CustomerOrderHistory";
+    var j = Model.Count;
+}
+
+<h2>Customer Order History</h2><br>
+<h5>Search customer by name:</h5>
+<input type="text" id="name" class="form-control"><br>
+<input type="button" id="button" value="Search" class="btn btn-success"  />
+<br><hr>
+<table class="table" id="table">
+    <thead>
+        <tr>
+            <th>Customer Id</th>
+            <th>Book Name</th>
+            <th>Book Price</th>
+            <th>Order Date</th>
+            <th>Book Quantity</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < j; i++)
+        {
+            <tr>
+                <th>@Model[i].customer_Id</th>
+                <th scope="row" id="book_ids">@ViewBag.BookName[i]</th>
+                <th scope="row">@Model[i].book_Price</th>
+                <td>@Model[i].order_Time</td>
+                <td>@Model[i].total_Quantity</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+     $("#button").click(function () {
+         var txtVal = $("#name").val();
+         window.location = '@Url.Action("getcustomerbyName", "Book")?name='+txtVal;
+        });
+</script>

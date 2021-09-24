@@ -1,0 +1,121 @@
+﻿@model  dynamic
+
+@{
+    ViewBag.Title = "getBookDetails";
+    var j = Model.Count;
+    var customer = Request.Cookies["User_id"].Value.ToString();
+    var cusomerId = int.Parse(customer);
+}
+
+<h2>RIZVI BOOK WORLD</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th typeof="hidden"></th>
+            <th typeof="hidden"></th>
+            <th>Book Id</th>
+            <th>Book Name</th>
+            <th>Book Author</th>
+            <th>Book Price</th>
+            <th>Book Category</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i=0;i<j;i++)
+        {
+        <tr>
+            <th>
+                <input data-val="true"
+                       data-val-number="The field StudentId must be a number."
+                       data-val-required="The StudentId field is required."
+                       id="studentId"
+                       name="studentId"
+                       type="hidden"
+                       value=@Request.Cookies["User_id"].Value.ToString() />
+            </th>
+            <th>
+
+            </th>
+            <th scope="row" id="book_ids">@Model[i].book_Id</th>
+            <th scope="row">@Model[i].book_Name</th>
+            <td>@Model[i].book_Author</td>
+            <td>@Model[i].book_Price</td>
+            <td>@ViewBag.Cat[i]</td>
+
+            @if (ViewBag.Check[i] == 1)
+            {
+                <td><input type="button" value="Remove" class="btn btn-warning" onclick="DeleteCart(@Model[i].book_Id,@Request.Cookies["User_id"].Value.ToString())" /> </td>
+            }
+            else
+            {
+                <td><input type="button" value="Add to Cart  " class="btn btn-warning" onclick="Btnclick(@Model[i].book_Id)" /> </td>
+            }
+            <td><input type="button" value="Buy Now" class="btn btn-success" onclick="CheckOut(@Request.Cookies["User_id"].Value.ToString(),@Model[i].book_Id,@Model[i].book_Price)" /> </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    function Btnclick(id) {
+        var cusid = parseInt($("#studentId").val());
+        var bookid = parseInt(id);
+        
+        console.log(bookid);
+        var bookquantity = 1;
+        var obj = {
+            customer_Id: cusid,
+            book_Id: bookid,
+            book_Quantity: bookquantity
+        }
+        Cart(obj);
+    }
+    function Cart(obj) {
+        $.ajax({
+            url: "/Book/AddtoCart",
+            method: "POST",
+            data: obj,
+            success: function (data) {
+                alert("item added to cart");
+                location.reload();
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+    }
+    function DeleteCart(id,userid) {
+        $.ajax({
+            url: "/Book/deleteCart",
+            method: "POST",
+            data: { 'id': parseInt(id), 'userid': parseInt(userid) },
+            success: function (data) {
+                alert("item Remove from cart");
+                location.reload();
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+    }
+
+    function CheckOut(userid,bookid,bookprice) {
+        var today = new Date();
+        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+        var dateTime = date + ' ' + time;
+        $.ajax({
+            url: "/Book/BuyNow",
+            method: "POST",
+            data: { 'userid': parseInt(userid), 'dateTime': dateTime, 'book_Id': bookid, 'book_Price': bookprice },
+            success: function (data) {
+                alert("Your order will reach you soon...");
+                location.reload();
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+    }
+</script>

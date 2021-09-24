@@ -1,0 +1,83 @@
+﻿@model  dynamic
+
+@{
+    ViewBag.Title = "getCartDetails";
+    var j = Model.Count;
+}
+
+<h2>Your Cart</h2>
+@if (j == 0)
+{
+<h2>Your cart is empty</h2>
+}
+else
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th>Book Name</th>
+            <th>Book Author</th>
+            <th>Book Price</th>
+            <th>Book Category</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < j; i++)
+        {
+            <tr>
+                <th scope="row">@Model[i].book_Name</th>
+                <td>@Model[i].book_Author</td>
+                <td>@Model[i].book_Price</td>
+                <td>@ViewBag.cat[i]</td>
+                <td><input type="button" value="Remove" class="btn btn-success" onclick="Btnclick(@Model[i].book_Id,@Request.Cookies["User_id"].Value.ToString())" /> </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<br><br><br>
+<h2>Your Bill</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Total Item</th>
+            <th>Total Price</th>
+        </tr>    
+    </thead>
+    <tbody>
+        <tr>
+            <td>@j</td>
+            <td>@ViewBag.Total</td>
+        </tr>
+    </tbody>
+</table>
+<input type="button" value="Checkout" onclick="checkout(@Request.Cookies["User_id"].Value.ToString())" class="btn btn-success" />
+}
+<script>
+    function Btnclick(id, userid) {
+        $.ajax({
+            url: "/Book/deleteCart",
+            method: "POST",
+            data: { 'id': parseInt(id), 'userid': parseInt(userid) },
+            success: function (data) {
+                location.reload();
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+    }
+    function checkout(userid) {
+        var today = new Date();        var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();        var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();        var dateTime = date + ' ' + time;
+        $.ajax({
+            url: "/Book/AddtoOrder",
+            method: "POST",
+            data: {'userid': parseInt(userid),'Datetime':dateTime },
+            success: function (data) {
+                location.reload();
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        })
+    }
+</script>

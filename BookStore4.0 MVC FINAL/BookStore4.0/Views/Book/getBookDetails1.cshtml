@@ -1,0 +1,47 @@
+﻿@model  dynamic
+
+@{
+    ViewBag.Title = "getBookDetails1";
+    var j = Model.Count;
+    int a = 0;
+}
+<br>
+<br>
+<h2>Your Inventory</h2>
+<br>
+<br>
+<table class="table">
+    <thead>
+        <tr>
+
+            <th>Sr.No</th>
+            <th>Book Name</th>
+            <th>Book Author</th>
+            <th>Book Price</th>
+            <th>Book Category</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < j; i++)
+        {
+            a = i + 1;
+            <tr>
+
+                <th scope="row" id="book_ids">@a</th>
+                <th scope="row">@Model[i].book_Name</th>
+                <td>@Model[i].book_Author</td>
+                <td>@Model[i].book_Price</td>
+                <td>@ViewBag.Cat[i]</td>
+                <td>@Html.ActionLink("Edit", "GetBookById", new { id = Model[i].book_Id }) </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<input type="button" id="button" value="Add new Item  " class="btn btn-success" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script>
+     $("#button").click(function () {
+         window.location = '@Url.Action("AddBooks", "Book")';
+        });
+</script>
